@@ -1,8 +1,24 @@
 import React, { Component } from 'react';
 
 import { _deleteItem } from '../../API';
+import firebase from 'firebase';
 
 export default class Header extends Component {
+  state = {
+    isLoggedIn: null
+  };
+
+  componentWillMount() {
+    // real time auth change listener
+    firebase.auth().onAuthStateChanged(firebaseUser => {
+      if (firebaseUser) {
+        this.setState({ isLoggedIn: true });
+      } else {
+        this.setState({ isLoggedIn: null });
+      }
+    });
+  }
+
   render() {
     const { href, imgSrc, text } = this.props;
     return (
@@ -13,9 +29,11 @@ export default class Header extends Component {
         <p>
           {text}
         </p>
-        <button className="btn btn-danger" onClick={this._handleDeleteItem}>
-          delete item
-        </button>
+        {this.state.isLoggedIn
+          ? <button className="btn btn-danger" onClick={this._handleDeleteItem}>
+              delete item
+            </button>
+          : null}
       </div>
     );
   }
