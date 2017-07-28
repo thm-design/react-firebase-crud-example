@@ -1,67 +1,33 @@
-import React, { Component } from 'react';
+import './login.css';
+
+import React, { PureComponent } from 'react';
 
 import firebase from 'firebase';
 
-export default class Login extends Component {
+export default class Login extends PureComponent {
   state = {
     email: '',
     password: '',
-    isLoggedIn: null
+    displayName: '',
+    isLoggedIn: 'loading'
   };
 
-  componentWillMount() {
-    // real time auth change listener
-    firebase.auth().onAuthStateChanged(firebaseUser => {
-      if (firebaseUser) {
-        localStorage.setItem('react-crud-user', firebaseUser.email);
-        this.setState({ isLoggedIn: true });
-      } else {
-        localStorage.setItem('react-crud-user', null);
-        this.setState({ isLoggedIn: null });
-      }
-    });
+  componentWillReceiveProps(props) {
+    this.setState({ isLoggedIn: props.isLoggedIn });
   }
 
   render() {
-    return (
-      <div className="container portfolio-form ">
-        <div className="col-lg-12">
-          <div className="form-group row">
-            <label>Email</label>
-            <input
-              className="form-control"
-              onChange={this._handleInputChange}
-              autoComplete="on"
-              type="email"
-              name="email"
-            />
-          </div>
-          <div className="form-group row">
-            <label>Password</label>
-            <input
-              className="form-control"
-              onChange={this._handleInputChange}
-              autoComplete="on"
-              type="password"
-              name="password"
-            />
-          </div>
-          <div className="form-group row">
-            <button onClick={this._handleLogin} className="form-control btn btn-primary">
-              log in
-            </button>
-            <button onClick={this._handleSignup} className="form-control btn btn-danger">
-              sign up
-            </button>
-            {this.state.isLoggedIn
-              ? <button onClick={this._handleSignout} className="form-control btn btn-warning">
-                  log out
-                </button>
-              : null}
-          </div>
-        </div>
-      </div>
-    );
+    const { isLoggedIn } = this.state;
+    let page = <div />;
+    if (isLoggedIn === 'loading') {
+      page = <div>loading ...</div>;
+    } else if (isLoggedIn) {
+      page = this._renderLoggedInPage();
+    } else {
+      page = this._renderLoginForm();
+    }
+
+    return page;
   }
 
   _handleInputChange = event => {
@@ -72,18 +38,101 @@ export default class Login extends Component {
 
   _handleLogin = () => {
     const { email, password } = this.state;
+    const { history } = this.props;
     const promise = firebase.auth().signInWithEmailAndPassword(email, password);
+    promise.then(() => history.push('/'));
     promise.catch(e => console.error(e));
   };
 
   _handleSignup = () => {
     // TODO: validate email
-    const { email, password } = this.state;
+    const { email, password, displayName } = this.state;
+    const { history } = this.props;
     const promise = firebase.auth().createUserWithEmailAndPassword(email, password);
+    promise.then(() => {
+      const user = firebase.auth().currentUser;
+      user.updateProfile({ displayName }).catch(e => {
+        console.error(e);
+      });
+    });
+    promise.then(() => history.push('/'));
+
     promise.catch(e => console.error(e));
   };
 
   _handleSignout = () => {
-    const promise = firebase.auth().signOut();
+    firebase.auth().signOut();
+  };
+
+  _renderLoginForm = () => {
+    return (
+      <div className="container portfolio-form">
+        <div className="row">
+          <div className="col-sm-6 col-md-4 col-md-offset-4">
+            <div className="account-wall">
+              <img
+                className="profile-img"
+                src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120"
+                alt=""
+              />
+              <div className="form-signin">
+                <input
+                  type="email"
+                  name="email"
+                  className="form-control"
+                  placeholder="Email"
+                  required
+                  autoFocus
+                  onChange={this._handleInputChange}
+                />
+                <input
+                  type="password"
+                  name="password"
+                  className="form-control"
+                  placeholder="Password"
+                  required
+                  onChange={this._handleInputChange}
+                />
+                <button className="btn btn-lg btn-primary btn-block" onClick={this._handleLogin}>
+                  Sign in
+                </button>
+                <span className="clearfix" />
+              </div>
+            </div>
+            <a href="#" className="text-center new-account" onClick={this._handleSignup}>
+              Create an account
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  _renderLoggedInPage = () => {
+    const { displayName, email } = this.props.userObject || {};
+
+    return (
+      <div className="container portfolio-form ">
+        <div className="col-lg-12">
+          <div className="input-group row">
+            <div className="input-group row">
+              <label>Display Name:</label>
+              <p>
+                {displayName}
+              </p>
+            </div>
+            <div className="input-group row">
+              <label>Email:</label>
+              <p>
+                {email}
+              </p>
+              <button onClick={this._handleSignout} className="btn btn-warning">
+                log out
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
 }

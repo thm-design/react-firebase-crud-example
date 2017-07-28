@@ -1,26 +1,17 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import { _deleteItem } from '../../API';
-import firebase from 'firebase';
 
-export default class Header extends Component {
-  state = {
-    isLoggedIn: null
-  };
-
-  componentWillMount() {
-    // real time auth change listener
-    firebase.auth().onAuthStateChanged(firebaseUser => {
-      if (firebaseUser) {
-        this.setState({ isLoggedIn: true });
-      } else {
-        this.setState({ isLoggedIn: null });
-      }
-    });
-  }
-
+export default class PortfolioBox extends PureComponent {
   render() {
-    const { href, imgSrc, text } = this.props;
+    const { href, imgSrc, text, isLoggedIn } = this.props;
+
+    const deleteButton = isLoggedIn
+      ? <button className="btn btn-danger" onClick={this._handleDeleteItem}>
+          delete item
+        </button>
+      : null;
+
     return (
       <div className="col-md-3 portfolio-item">
         <a href={href} target="_blank">
@@ -29,11 +20,7 @@ export default class Header extends Component {
         <p>
           {text}
         </p>
-        {this.state.isLoggedIn
-          ? <button className="btn btn-danger" onClick={this._handleDeleteItem}>
-              delete item
-            </button>
-          : null}
+        {deleteButton}
       </div>
     );
   }

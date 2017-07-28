@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
-export default class PageHeader extends Component {
+export default class PageHeader extends PureComponent {
   render() {
     return (
       <div className="col-lg-12">

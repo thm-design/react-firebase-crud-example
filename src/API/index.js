@@ -1,4 +1,5 @@
 import fire from '../fire';
+import firebase from 'firebase';
 
 const database = fire.database();
 const portfolioItemsRef = database.ref('portfolioItems').orderByKey().limitToLast(100);
@@ -26,7 +27,7 @@ const _deleteItem = (event, key) => {
  * Listens to POST, or the 'add node' event in firebase and sets the components state
  * @param  {object} executionContext [the value of this in the other component, needed to call this.setState()]
  */
-const _listenToPostEvent = executionContext => {
+const _listenToPostEvents = executionContext => {
   portfolioItemsRef.on('child_added', snapshot => {
     const state = executionContext.state.portfolioItems;
     const portfolioItem = {
@@ -53,6 +54,18 @@ const _listenToPostEvent = executionContext => {
   });
 };
 
+const _listenToAuthEvents = executionContext => {
+  firebase.auth().onAuthStateChanged(firebaseUser => {
+    if (firebaseUser) {
+      console.log('User is logged in: user object', firebaseUser);
+      executionContext.setState({ isLoggedIn: true, userObject: firebaseUser });
+    } else {
+      console.log('User is not loggedin');
+      executionContext.setState({ isLoggedIn: null, userObject: null });
+    }
+  });
+};
+
 /**
  * Gets data from the database
  */
@@ -64,4 +77,4 @@ const _getData = executionContext => {
   });
 };
 
-export { _getData, _postData, _listenToPostEvent, _deleteItem };
+export { _getData, _postData, _listenToPostEvents, _deleteItem, _listenToAuthEvents };
