@@ -1,17 +1,19 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { _listenToAuthEvents, _listenToPostEvents } from './API';
 
+import Contact from './components/pages/Contact';
 import Login from './components/admin/Login';
 import Navbar from './components/navbar/Navbar';
 import PageHeader from './components/pageheader/PageHeader';
 import PortfolioBox from './components/portfoliobox/PortfolioBox';
 import PortfolioForm from './components/admin/PortfolioForm';
+import Skills from './components/pages/Skills';
 
-export default class App extends PureComponent {
+export default class App extends Component {
   state = {
     portfolioItems: [],
     isLoggedIn: null,
@@ -42,6 +44,8 @@ export default class App extends PureComponent {
             <PageHeader />
             <Switch>
               <Route exact path="/" component={Home} />
+              <Route exact path="/skills" component={Skills} />
+              <Route exact path="/contact" component={Contact} />
               <Route
                 path="/login"
                 render={props => <Login {...props} userObject={userObject} isLoggedIn={isLoggedIn} />}

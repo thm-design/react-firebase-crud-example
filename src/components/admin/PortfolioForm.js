@@ -1,8 +1,8 @@
-import React, { PortComponent } from 'react';
+import React, { PureComponent } from 'react';
 
 import { _postData } from '../../API';
 
-export default class PortfolioForm extends PortComponent {
+export default class PortfolioForm extends PureComponent {
   state = {
     href: '',
     imgSrc: '',

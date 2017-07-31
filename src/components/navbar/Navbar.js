@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
 
+import { Link } from 'react-router-dom';
+
 export default class Navbar extends PureComponent {
   render() {
     return (
@@ -18,20 +20,17 @@ export default class Navbar extends PureComponent {
                 <span className="icon-bar" />
                 <span className="icon-bar" />
               </button>
-              <a className="navbar-brand" href="#">
+              <a className="navbar-brand" href="/">
                 Branding / Logo
               </a>
             </div>
             <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul className="nav navbar-nav">
                 <li>
-                  <a href="#">Navigation 1</a>
+                  <Link to="/skills">Skills</Link>
                 </li>
                 <li>
-                  <a href="#">Navigation 2</a>
-                </li>
-                <li>
-                  <a href="#">Navigation 3</a>
+                  <Link to="/contact">Contact</Link>
                 </li>
               </ul>
             </div>
