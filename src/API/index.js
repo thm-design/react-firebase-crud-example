@@ -10,16 +10,15 @@ const portfolioItemsRef = database.ref('portfolioItems').orderByKey().limitToLas
  * @param  {react.Dom} inputEl [refrence to input element]
  */
 const _postData = (event, state) => {
-  // prevent form submit from reloading the page
-  event.preventDefault();
-
-  // send the message to Firebase
   database.ref('portfolioItems').push(state);
 };
 
+/**
+ * Deleted data from the database
+ * @param  {event} event [the click event]
+ * @param  {react.Dom} inputEl [refrence to input element]
+ */
 const _deleteItem = (event, key) => {
-  // prevent form submit from reloading the page
-  event.preventDefault();
   database.ref('portfolioItems').child(key).remove();
 };
 
@@ -28,18 +27,21 @@ const _deleteItem = (event, key) => {
  * @param  {object} executionContext [the value of this in the other component, needed to call this.setState()]
  */
 const _listenToPostEvents = executionContext => {
-  portfolioItemsRef.on('child_added', snapshot => {
+  // listen to portfolio box added event
+  portfolioItemsRef.on('child_added', item => {
     const state = executionContext.state.portfolioItems;
     const portfolioItem = {
-      href: snapshot.val().href,
-      imgSrc: snapshot.val().imgSrc,
-      text: snapshot.val().text,
-      key: snapshot.key
+      href: item.val().href,
+      imgSrc: item.val().imgSrc,
+      text: item.val().text,
+      key: item.key
     };
 
+    // Add and save the new portfolio item
     executionContext.setState({ portfolioItems: [portfolioItem].concat(state) });
   });
 
+  // listen to portfolio box removed event
   portfolioItemsRef.on('child_removed', snapshot => {
     const state = executionContext.state.portfolioItems;
     const portfolioItem = {
@@ -49,7 +51,10 @@ const _listenToPostEvents = executionContext => {
       key: snapshot.key
     };
 
+    // Remove portfolio item from state
     const newState = state.filter(item => item.key !== portfolioItem.key);
+
+    // Save the new set of portfolio items
     executionContext.setState({ portfolioItems: newState });
   });
 };
