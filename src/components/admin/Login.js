@@ -61,7 +61,9 @@ export default class Login extends PureComponent {
   };
 
   _handleSignout = () => {
+    const { history } = this.props;
     firebase.auth().signOut();
+    history.push('/');
   };
 
   _renderLoginForm = () => {
