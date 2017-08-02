@@ -19,9 +19,10 @@ Install Create React App:
 #### Go to you computer's terminal and run the following commands:
 
 
-2) `npm i --save firebase && npm i -g firebase-tools` (Only need to do this once per computer)
-3) `firebase login` (follow login instructions)
-4) `firebase init`
+2) `npm i --save firebase`
+3) `npm i -g firebase-tools` (Only need to do this once per computer)
+4) `firebase login` (follow login instructions)
+5) `firebase init`
 	* Press spacebar to choose 'Database' and 'Hosting' then press enter
 	![](http://g.recordit.co/d1mjatTgOo.gif)
 	* Choose a Firebase project (choose the one you have created already)
@@ -29,8 +30,8 @@ Install Create React App:
 	* Q: What do you want to use as your public directory? > `build`
 	* Q: Configure as a single-page app > `y`
 
-5) Create a file in your react app called `fire.js` in the `src` folder
-6) Paste the following into that file:
+6) Create a file in your react app called `fire.js` in the `src` folder.
+7) Paste the following into that file:
 ```javascript
 	/* COPY THE DATA FROM YOUR FIREBASE APP DASHBOARD (see image below) */
     import firebase from 'firebase'
@@ -48,5 +49,5 @@ Install Create React App:
 * You can find your app data in you firebase app dashboard:
 ![firebase dasboard](http://g.recordit.co/BT3bumdVms.gif)
 
-7) Go to your Firebase project dashboard, click on: `Database > Rules` and set 'read' and 'write' to `true`
+8) Go to your Firebase project dashboard, click on: `Database > Rules` and set 'read' and 'write' to `true`
 ![](http://g.recordit.co/HK06pHx5gb.gif)
