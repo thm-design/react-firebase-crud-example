@@ -29,7 +29,7 @@ Install Create React App:
 	* Q: What do you want to use as your public directory? > `build`
 	* Q: Configure as a single-page app > `y`
 
-5) Create a file in your react app called `fire.js` in the `src` folder.
+5) Create a file in your react app called `fire.js` in the `src` folder
 6) Paste the following into that file:
 ```javascript
 	/* COPY THE DATA FROM YOUR FIREBASE APP DASHBOARD (see image below) */
